@@ -41,4 +41,20 @@ displayBoard()
 
 }
 
+
+letterAssign(){
+	if [[ $((RANDOM%2)) -eq 0 ]];	then
+		playerOne=X
+		PlayerTwo=O
+		echo "Player1 ==> X"
+		echo "Player2 ==> O"
+	else
+		playerOne=O
+      PlayerTwo=X
+      echo "Player1 ==> O"
+      echo "Player2 ==> X"
+	fi
+}
+initializeBoard
 displayBoard
+letterAssign
