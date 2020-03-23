@@ -36,15 +36,18 @@ displayBoard(){
 }
 
 letterAssign(){
-	read -p "Enter the PlayerOne Letter ::" letter
-		if (( letter == X )) 
-		then
-			playerOne="X"
-			playerTwo="O"
-		else
-			playerOne="O"
-			playerTwo="X"
-		fi
+
+	if [[ $((RANDOM%2)) -eq 0 ]]; then
+		playerOne=X
+      playerTwo=O
+      echo "Player1 ==> X"
+      echo "Player2 ==> O"
+	else
+		playerOne=O
+      playerTwo=X
+      echo "Player1 ==> O"
+      echo "Player2 ==> X"
+	fi
 }
 
 toss(){
@@ -56,7 +59,7 @@ toss(){
 }
 
 startToPlay(){
-letterAssign
+#letterAssign
 	while [[ $turn -lt 9 && isWon -eq 0 ]]
 	do
 		if [[ $(($turn%2)) -eq 0 ]]; then
@@ -130,6 +133,20 @@ checkWin(){
 	fi
 }
 
+computerTurn(){
+		generatedNum=$((RANDOM%8))
+		row=$(($generatedNum/3))
+      		c=$(($generatedNum%3))
+		if [[ ${board[$row,$column]} ==  X || ${board[$row,$column]} == O ]]
+		then
+			computerTurn
+		elif [[ ${board[$row,$column]} == - ]]
+		then
+			computerPosition=$generatedNum
+		fi
+	echo $computerPosition
+}
+
 wantToPlay(){
 	read -p "Would You Like To Toss Y/N ?" isToss
 	if [[ $isToss == Y || $isToss == y ]]; then
@@ -143,5 +160,5 @@ wantToPlay(){
 
 initializeBoard
 displayBoard
+letterAssign
 wantToPlay
-
