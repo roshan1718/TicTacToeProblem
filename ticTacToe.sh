@@ -19,7 +19,7 @@ initializeBoard()
 	do
 		for ((column=1; column<=$noOfColumns; column++ ))
 		do
-			board[row,column]="+"
+			board[row,column]="-"
 		done
 	done
 }
