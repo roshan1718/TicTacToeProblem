@@ -175,6 +175,9 @@ checkWinBlockPlay(){
 		gameBoard[2,0]=$computer
 	elif [[ ${gameBoard[2,2]} == "+" ]]; then
 		gameBoard[2,2]=$computer
+#Center
+	elif [[ ${gameBoard[1,1]} == "+" ]]; then
+		gameBoard[1,1]=$computer
 	else
 		generatedNum=$((RANDOM%9))
 		row=$(($generatedNum/3))
