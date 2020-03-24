@@ -172,21 +172,21 @@ checkWinBlockPlay(){
 	elif [[ ${gameBoard[0,2]} == "+" ]]; then
 		gameBoard[0,2]=$computer
 	elif [[ ${gameBoard[2,0]} == "+" ]]; then
-      gameBoard[2,0]=$computer
+		gameBoard[2,0]=$computer
 	elif [[ ${gameBoard[2,2]} == "+" ]]; then
-      gameBoard[2,2]=$computer
+		gameBoard[2,2]=$computer
 	else
-			generatedNum=$((RANDOM%9))
-			row=$(($generatedNum/3))
-			column=$(($generatedNum%3))
+		generatedNum=$((RANDOM%9))
+		row=$(($generatedNum/3))
+		column=$(($generatedNum%3))
 		
-			if [[ ${gameBoard[$row,$column]} ==  $playerOne || ${gameBoard[$row,$column]} == $computer ]]; then
-				computerTurn
-			else
-				gameBoard[$row,$column]=$computer
-				return
-			fi
+		if [[ ${gameBoard[$row,$column]} ==  $playerOne || ${gameBoard[$row,$column]} == $computer ]]; then
+			computerTurn
+		else
+			gameBoard[$row,$column]=$computer
+			return
 		fi
+	fi
 	
 }
 
@@ -202,7 +202,7 @@ wantToPlay(){
 		fi
 	else
 		echo "Exiting.."
-	exit
+		exit
 	fi
 }
 initializeBoard
