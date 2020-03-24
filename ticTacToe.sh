@@ -2,163 +2,195 @@
 
 # @ Description: Tic Tac Toe Problem
 # @ Author: Roshan Balkrushna Shinde
-# @ Since: 23-03-2020 
+# @ Since: 24-03-2020 
 
-declare -A board
+declare -A gameBoard
 
-# Variables
+playerOne="a"
+computer="a"
 player="a"
-turn=0
+noOfTimePlay=0
+cPosition=0
 noOfRows=3
 noOfColumns=3
+temporaryVar=0
 
 initializeBoard(){
-	for (( row=1; row<=$noOfRows; row++ )) 
-	do
-		for ((column=1; column<=$noOfColumns; column++ ))	
-		do
-			board[$row,$column]="-"
+	for (( row=0; row<$noOfRows; row++ )); do
+		for ((column=0; column<$noOfColumns; column++ ));do
+			gameBoard[$row,$column]="+"
 		done
 	done
 }
-
 displayBoard(){
-	for (( row=1; row<=$noOfRows; row++ ))
-	do
+	for (( row=0; row<$noOfRows; row++ )); do
 		echo "---------------"
-		for (( column=1; column<=$noOfColumns; column++ ))
-		do
-			printf "[ ${board[$row,$column]} ]"
+		for (( column=0; column<$noOfColumns; column++ )); do
+			printf "[ ${gameBoard[$row,$column]} ]"
 		done
 		echo
 	done
 	echo "---------------"
 }
-
-letterAssign(){
-
-	if [[ $((RANDOM%2)) -eq 0 ]]; then
-		playerOne=X
-      playerTwo=O
-      echo "Player1 ==> X"
-      echo "Player2 ==> O"
-	else
-		playerOne=O
-      playerTwo=X
-      echo "Player1 ==> O"
-      echo "Player2 ==> X"
-	fi
-}
-
-toss(){
+toss()
+{
 	if [[ $((RANDOM%2)) -eq 0 ]]; then
 		echo "Player1 Will Play First"
+		startToPlay
 	else
-		echo "Player2 Will Play First"
+		echo "Computer Will Play First"
+		temporaryVar=1
+		startToPlay
 	fi
 }
-
 startToPlay(){
-#letterAssign
-	while [[ $turn -lt 9 && isWon -eq 0 ]]
+	playerOne="X"
+	computer="O"
+
+	while [[ $noOfTimePlay -lt 9 && $checkWinFlag -eq 0 ]]
 	do
-		if [[ $(($turn%2)) -eq 0 ]]; then
-			read -p "Player 1 Enter Position" position
+		if [[ $(($noOfTimePlay%2)) -eq $temporaryVar ]]; then
+			read -p "Enter Your Choice ==>" position
 			player=$playerOne
 		else
-			read -p "Player 2 Enter Position" position
-			player=$playerTwo
-		fi
-		case $position in
-			1)
-				board[1,1]=$player;;
-			2)
-				board[1,2]=$player;;
-			3)
-				board[1,3]=$player;;
-			4)
-				board[2,1]=$player;;
-			5)
-				board[2,2]=$player;;
-			6)
-				board[2,3]=$player;;
-			7)
-				board[3,1]=$player;;
-			8)
-				board[3,2]=$player;;
-			9)
-            board[3,3]=$player;;
-			*)
-				echo Invalid Position
-				((turn--));;
-		esac
-		((turn++))
-		checkWin
-		displayBoard
-		if [[ $player -eq X && $isWon -eq 1 ]]
-		then
-			echo "Player 1 Won.."
-		elif [[ $player -eq O && $isWon -eq 1 ]]
-		then
-			echo "Player 2 Won.."
-		fi
-		if [[ $turn -eq 9 ]]; 
-		then
-			echo "Match Tied"
-		fi
-	done
-}
-
-checkWin(){
-	if [[ ${board[1,1]} == $player && ${board[1,2]} == $player &&  ${board[1,3]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[2,1]} == $player && ${board[2,2]} == $player &&  ${board[2,3]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[3,1]} == $player && ${board[3,2]} == $player &&  ${board[3,3]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[1,1]} == $player && ${board[2,1]} == $player &&  ${board[3,1]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[1,2]} == $player && ${board[2,2]} == $player &&  ${board[3,2]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[1,3]} == $player && ${board[2,3]} == $player &&  ${board[3,3]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[1,1]} == $player && ${board[2,2]} == $player &&  ${board[3,3]} == $player ]]; then
-		isWon=1
-	elif [[ ${board[1,3]} == $player && ${board[2,2]} == $player &&  ${board[3,3]} == $player ]]; then
-		isWon=1
-	fi
-	if [[ $turns -eq 9 ]]
-	then
-		echo "Match Tied"
-	fi
-}
-
-computerTurn(){
-		generatedNum=$((RANDOM%8))
-		row=$(($generatedNum/3))
-      		c=$(($generatedNum%3))
-		if [[ ${board[$row,$column]} ==  X || ${board[$row,$column]} == O ]]
-		then
 			computerTurn
-		elif [[ ${board[$row,$column]} == - ]]
-		then
-			computerPosition=$generatedNum
+			checkWin $playerVariable
 		fi
-	echo $computerPosition
+		((noOfTimePlay++))
+		case $position in
+		0)
+			gameBoard[0,0]=$player;;
+		1)
+			gameBoard[0,1]=$player;;
+		2)
+			gameBoard[0,2]=$player;;
+		3)
+			gameBoard[1,0]=$player;;
+		4)
+			gameBoard[1,1]=$player;;
+		5)
+			gameBoard[1,2]=$player;;
+		6)
+			gameBoard[2,0]=$player;;
+		7)
+			gameBoard[2,1]=$player;;
+		8)
+			gameBoard[2,2]=$player;;
+		esac
+	displayBoard
+	checkWin $player
+done
+}
+checkWin(){
+	local	player=$1
+
+	if [[ ${gameBoard[0,0]} == $player && ${gameBoard[0,1]} == $player &&  ${gameBoard[0,2]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[1,0]} == $player && ${gameBoard[1,1]} == $player &&  ${gameBoard[1,2]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[2,0]} == $player && ${gameBoard[2,1]} == $player &&  ${gameBoard[2,2]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[0,0]} == $player && ${gameBoard[1,0]} == $player &&  ${gameBoard[2,0]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[0,1]} == $player && ${gameBoard[1,1]} == $player &&  ${gameBoard[2,1]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[0,2]} == $player && ${gameBoard[1,2]} == $player &&  ${gameBoard[2,2]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[0,0]} == $player && ${gameBoard[1,1]} == $player &&  ${gameBoard[2,2]} == $player ]]; then
+		checkWinFlag=1
+	elif [[ ${gameBoard[0,2]} == $player && ${gameBoard[1,1]} == $player &&  ${gameBoard[2,0]} == $player ]]; then
+		checkWinFlag=1
+	fi
+	if [[ $checkWinFlag -eq 1 ]]; then
+		echo "$player Won.."
+		displayBoard
+		exit
+	fi
+}
+computerTurn(){
+	checkWinPlay
+	return
+}
+checkWinPlay(){
+	playerVariable=$computer
+	
+	if [[ ${gameBoard[0,0]} == "$playerVariable"  && ${gameBoard[0,1]} == "$playerVariable" && ${gameBoard[0,2]} == "+" ]]; then
+		gameBoard[0,2]=$computer
+	elif [[ ${gameBoard[1,0]} == "$playerVariable"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[1,2]} == "+" ]]; then
+		gameBoard[1,2]=$computer
+	elif [[ ${gameBoard[2,0]} == "$playerVariable"  && ${gameBoard[2,1]} == "$playerVariable" && ${gameBoard[2,2]} == "+" ]]; then
+		gameBoard[0,2]=$computer
+	elif [[ ${gameBoard[0,0]} == "$playerVariable"  && ${gameBoard[1,0]} == "$playerVariable" && ${gameBoard[2,0]} == "+" ]]; then
+		gameBoard[2,0]=$computer
+	elif [[ ${gameBoard[0,1]} == "$playerVariable"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[2,1]} == "+" ]]; then
+		gameBoard[2,2]=$computer
+	elif [[ ${gameBoard[0,2]} == "$playerVariable"  && ${gameBoard[1,2]} == "$playerVariable" && ${gameBoard[2,2]} == "+" ]]; then
+		gameBoard[2,2]=$computer
+	elif [[ ${gameBoard[0,0]} == "$playerVariable"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[2,2]} == "+" ]]; then
+		gameBoard[2,2]=$computer
+	elif [[ ${gameBoard[0,2]} == "$playerVariable"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[2,0]} == "+" ]]; then
+		gameBoard[2,0]=$computer
+	elif [[ ${gameBoard[0,0]} == "+"  && ${gameBoard[0,1]} == "$playerVariable" && ${gameBoard[0,2]} == "$playerVariable" ]]; then
+		gameBoard[0,0]=$computer
+	elif [[ ${gameBoard[1,0]} == "+"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[1,2]} == "$playerVariable" ]]; then
+		gameBoard[1,0]=$computer
+	elif [[ ${gameBoard[2,0]} == "+"  && ${gameBoard[2,1]} == "$playerVariable" && ${gameBoard[2,2]} == "$playerVariable" ]]; then
+		gameBoard[2,0]=$computer
+	elif [[ ${gameBoard[0,0]} == "+"  && ${gameBoard[1,0]} == "$playerVariable" && ${gameBoard[2,0]} == "$playerVariable" ]]; then
+		gameBoard[0,0]=$computer
+	elif [[ ${gameBoard[0,1]} == "+"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[2,1]} == "$playerVariable" ]]; then
+		gameBoard[0,1]=$computer
+	elif [[ ${gameBoard[0,2]} == "+"  && ${gameBoard[1,2]} == "$playerVariable" && ${gameBoard[2,2]} == "$playerVariable" ]]; then
+		gameBoard[0,2]=$computer
+	elif [[ ${gameBoard[0,0]} == "+"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[2,2]} == "$playerVariable" ]]; then
+		gameBoard[0,0]=$computer
+	elif [[ ${gameBoard[0,2]} == "+"  && ${gameBoard[1,1]} == "$playerVariable" && ${gameBoard[2,0]} == "$playerVariable" ]]; then
+		gameBoard[0,2]=$computer
+	elif [[ ${gameBoard[0,0]} == "$playerVariable"  && ${gameBoard[0,1]} == "+" && ${gameBoard[0,2]} == "$playerVariable" ]]; then
+		gameBoard[0,1]=$computer
+	elif [[ ${gameBoard[1,0]} == "$playerVariable"  && ${gameBoard[1,1]} == "+" && ${gameBoard[1,2]} == "$playerVariable" ]]; then
+		gameBoard[1,2]=$computer
+	elif [[ ${gameBoard[2,0]} == "$playerVariable"  && ${gameBoard[2,1]} == "+" && ${gameBoard[2,2]} == "$playerVariable" ]]; then
+		gameBoard[2,1]=$computer
+	elif [[ ${gameBoard[1,0]} == "$playerVariable"  && ${gameBoard[1,0]} == "+" && ${gameBoard[2,0]} == "$playerVariable" ]]; then
+		gameBoard[2,0]=$computer
+	elif [[ ${gameBoard[0,1]} == "$playerVariable"  && ${gameBoard[1,1]} == "+" && ${gameBoard[2,1]} == "$playerVariable" ]]; then
+		gameBoard[1,1]=$computer
+	elif [[ ${gameBoard[0,2]} == "$playerVariable"  && ${gameBoard[1,2]} == "+" && ${gameBoard[2,2]} == "$playerVariable" ]]; then
+		gameBoard[1,2]=$computer
+	elif [[ ${gameBoard[0,0]} == "$playerVariable"  && ${gameBoard[1,1]} == "+" && ${gameBoard[2,2]} == "$playerVariable" ]]; then
+		gameBoard[1,1]=$computer
+	elif [[ ${gameBoard[0,2]} == "$playerVariable"  && ${gameBoard[1,1]} == "+" && ${gameBoard[2,0]} == "$playerVariable" ]]; then
+		gameBoard[1,1]=$computer
+	else
+		generatedNum=$((RANDOM%9))
+		row=$(($generatedNum/3))
+		column=$(($generatedNum%3))
+
+		if [[ ${gameBoard[$row,$column]} ==  $playerOne || ${gameBoard[$row,$column]} == $computer ]]; then
+			computerTurn
+		else
+			gameBoard[$row,$column]=$computer
+			return
+		fi
+	fi
 }
 
 wantToPlay(){
-	read -p "Would You Like To Toss Y/N ?" isToss
-	if [[ $isToss == Y || $isToss == y ]]; then
-		echo "Player 1 Will Play First"
-		startToPlay
+	read -p "Would You Like To Start game Y/N ?" isStart
+	if [[ $isStart == Y || $isStart == y ]]; then
+		read -p "Would You Like To Toss..? Y/N " isToss
+		if [[ $isToss == Y || $isToss == y ]]; then
+			toss
+		else
+			echo "Okay..Starting Game"
+			startToPlay
+		fi
 	else
-		echo "Okay..Starting Game"
-		startToPlay
+		echo "Exiting.."
+	exit
 	fi
 }
-
 initializeBoard
 displayBoard
-letterAssign
 wantToPlay
