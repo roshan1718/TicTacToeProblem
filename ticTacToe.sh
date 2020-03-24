@@ -163,11 +163,19 @@ checkWinBlockPlay(){
 		gameBoard[1,1]=$computer
 	elif [[ ${gameBoard[0,2]} == "$playerVariable"  && ${gameBoard[1,1]} == "+" && ${gameBoard[2,0]} == "$playerVariable" ]]; then
 		gameBoard[1,1]=$computer
+	elif [[ $count -eq 0 ]] ; then
+		((count++))
+		checkWinBlockPlay $playerOne
+#Corners
+	elif [[ ${gameBoard[0,0]} == "+" ]]; then
+		gameBoard[0,0]=$computer
+	elif [[ ${gameBoard[0,2]} == "+" ]]; then
+		gameBoard[0,2]=$computer
+	elif [[ ${gameBoard[2,0]} == "+" ]]; then
+      gameBoard[2,0]=$computer
+	elif [[ ${gameBoard[2,2]} == "+" ]]; then
+      gameBoard[2,2]=$computer
 	else
-		if [[ $count -eq 0 ]] ; then
-			((count++))
-			checkWinBlockPlay $playerOne
-		else
 			generatedNum=$((RANDOM%9))
 			row=$(($generatedNum/3))
 			column=$(($generatedNum%3))
@@ -179,7 +187,7 @@ checkWinBlockPlay(){
 				return
 			fi
 		fi
-	fi
+	
 }
 
 wantToPlay(){
