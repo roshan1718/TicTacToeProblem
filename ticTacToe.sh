@@ -14,6 +14,7 @@ cPosition=0
 noOfRows=3
 noOfColumns=3
 temporaryVar=0
+count=0
 
 initializeBoard(){
 	for (( row=0; row<$noOfRows; row++ )); do
@@ -108,11 +109,11 @@ checkWin(){
 	fi
 }
 computerTurn(){
-	checkWinPlay
+	checkWinBlockPlay $computer
 	return
 }
-checkWinPlay(){
-	playerVariable=$computer
+checkWinBlockPlay(){
+	playerVariable=$1
 	
 	if [[ ${gameBoard[0,0]} == "$playerVariable"  && ${gameBoard[0,1]} == "$playerVariable" && ${gameBoard[0,2]} == "+" ]]; then
 		gameBoard[0,2]=$computer
@@ -163,15 +164,20 @@ checkWinPlay(){
 	elif [[ ${gameBoard[0,2]} == "$playerVariable"  && ${gameBoard[1,1]} == "+" && ${gameBoard[2,0]} == "$playerVariable" ]]; then
 		gameBoard[1,1]=$computer
 	else
-		generatedNum=$((RANDOM%9))
-		row=$(($generatedNum/3))
-		column=$(($generatedNum%3))
-
-		if [[ ${gameBoard[$row,$column]} ==  $playerOne || ${gameBoard[$row,$column]} == $computer ]]; then
-			computerTurn
+		if [[ $count -eq 0 ]] ; then
+			((count++))
+			checkWinBlockPlay $playerOne
 		else
-			gameBoard[$row,$column]=$computer
-			return
+			generatedNum=$((RANDOM%9))
+			row=$(($generatedNum/3))
+			column=$(($generatedNum%3))
+		
+			if [[ ${gameBoard[$row,$column]} ==  $playerOne || ${gameBoard[$row,$column]} == $computer ]]; then
+				computerTurn
+			else
+				gameBoard[$row,$column]=$computer
+				return
+			fi
 		fi
 	fi
 }
